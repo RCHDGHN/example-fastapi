@@ -48,7 +48,4 @@ SQLAlchemy==2.0.36
 starlette==0.41.3
 typer==0.15.1
 typing_extensions==4.12.2
-ujson==5.10.0
-uvicorn==0.32.1
-watchfiles==1.0.0
-websockets==14.1
+uvicorn[standard]

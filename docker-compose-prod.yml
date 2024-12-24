@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  fastapi_app:
+    build:
+      context: .  # Build the app from the current directory
+      dockerfile: Dockerfile  # Ensure the Dockerfile exists in your root folder
+    ports:
+      - "80:8000"  # Expose FastAPI app on port 80
+    environment:
+      - DATABASE_HOSTNAME=db  # Reference the database service
+      - DATABASE_PORT=5432
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}  # Use environment variable for DB password
+      - DATABASE_NAME=fastapi
+      - DATABASE_USERNAME=postgres
+      - SECRET_KEY=${SECRET_KEY}  # Secure key for JWT or other use cases
+      - ALGORITHM=${ALGORITHM}  # JWT algorithm
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}  # JWT expiration time
+    depends_on:
+      - db  # Make sure the database service is up before FastAPI app starts
+    restart: always  # Restart on failure
+
+  db:
+    image: postgres  # Use the official postgres image
+    restart: always
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}  # Read from .env or Docker Secrets
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}  # Read from .env or Docker Secrets
+      POSTGRES_DB: ${DATABASE_NAME}  # Set the DB name from environment variable
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist DB data on the host machine
+
+volumes:
+  postgres_data:  # Named volume to persist database data

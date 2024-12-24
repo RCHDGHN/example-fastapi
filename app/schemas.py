@@ -23,7 +23,7 @@ class PostResponse(PostBase):
     created_at: datetime
     owener_id : int
     owner : UserResponse
-    vote_count : int
+
     
 class UserCreate(BaseModel):
     email: EmailStr
